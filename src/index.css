@@ -45,4 +45,8 @@
   .status-crashed {
     @apply bg-warning;
   }
+
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black bg-opacity-50 z-40;
+  }
 }

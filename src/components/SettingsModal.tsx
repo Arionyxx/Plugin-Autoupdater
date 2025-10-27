@@ -27,7 +27,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     const loadSettings = async () => {
       try {
         const savedSettings = await getSettings();
-        setSettings({ ...settings, ...savedSettings });
+        setSettings(prev => ({ ...prev, ...savedSettings }));
       } catch (error) {
         console.error('Failed to load settings:', error);
       }
@@ -80,47 +80,49 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box max-w-4xl">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold flex items-center">
-            <Shield className="w-6 h-6 mr-2" />
-            Settings
-          </h2>
-          <button
-            onClick={onClose}
-            className="btn btn-sm btn-circle btn-ghost"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+    <>
+      <div className="modal-backdrop" onClick={onClose}></div>
+      <div className="modal modal-open">
+        <div className="modal-box max-w-4xl">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold flex items-center">
+              <Shield className="w-6 h-6 mr-2" />
+              Settings
+            </h2>
+            <button
+              onClick={onClose}
+              className="btn btn-sm btn-circle btn-ghost"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
-        <div className="tabs tabs-boxed mb-6">
-          <button
-            className={`tab ${activeTab === 'general' ? 'tab-active' : ''}`}
-            onClick={() => setActiveTab('general')}
-          >
-            General
-          </button>
-          <button
-            className={`tab ${activeTab === 'api' ? 'tab-active' : ''}`}
-            onClick={() => setActiveTab('api')}
-          >
-            API Keys
-          </button>
-          <button
-            className={`tab ${activeTab === 'backup' ? 'tab-active' : ''}`}
-            onClick={() => setActiveTab('backup')}
-          >
-            Backup
-          </button>
-          <button
-            className={`tab ${activeTab === 'appearance' ? 'tab-active' : ''}`}
-            onClick={() => setActiveTab('appearance')}
-          >
-            Appearance
-          </button>
-        </div>
+          <div className="tabs tabs-boxed mb-6">
+            <button
+              className={`tab ${activeTab === 'general' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('general')}
+            >
+              General
+            </button>
+            <button
+              className={`tab ${activeTab === 'api' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('api')}
+            >
+              API Keys
+            </button>
+            <button
+              className={`tab ${activeTab === 'backup' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('backup')}
+            >
+              Backup
+            </button>
+            <button
+              className={`tab ${activeTab === 'appearance' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('appearance')}
+            >
+              Appearance
+            </button>
+          </div>
 
         <div className="space-y-6">
           {activeTab === 'general' && (
@@ -269,9 +271,38 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
                   value={settings.theme}
                   onChange={(e) => updateSetting('theme', e.target.value)}
                 >
+                  <option value="light">Light</option>
                   <option value="dark">Dark</option>
+                  <option value="cupcake">Cupcake</option>
+                  <option value="bumblebee">Bumblebee</option>
+                  <option value="emerald">Emerald</option>
+                  <option value="corporate">Corporate</option>
+                  <option value="synthwave">Synthwave</option>
+                  <option value="retro">Retro</option>
+                  <option value="cyberpunk">Cyberpunk</option>
+                  <option value="valentine">Valentine</option>
+                  <option value="halloween">Halloween</option>
+                  <option value="garden">Garden</option>
+                  <option value="forest">Forest</option>
+                  <option value="aqua">Aqua</option>
+                  <option value="lofi">Lofi</option>
+                  <option value="pastel">Pastel</option>
+                  <option value="fantasy">Fantasy</option>
+                  <option value="wireframe">Wireframe</option>
+                  <option value="black">Black</option>
+                  <option value="luxury">Luxury</option>
+                  <option value="dracula">Dracula</option>
+                  <option value="cmyk">CMYK</option>
+                  <option value="autumn">Autumn</option>
+                  <option value="business">Business</option>
+                  <option value="acid">Acid</option>
+                  <option value="lemonade">Lemonade</option>
                   <option value="night">Night</option>
-                  <option value="minecraft">Minecraft</option>
+                  <option value="coffee">Coffee</option>
+                  <option value="winter">Winter</option>
+                  <option value="nord">Nord</option>
+                  <option value="sunset">Sunset</option>
+                  <option value="minecraft">Minecraft (Custom)</option>
                 </select>
               </div>
             </div>
@@ -314,6 +345,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

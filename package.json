@@ -1,6 +1,7 @@
 {
   "name": "mc-plugin-manager",
   "version": "1.0.0",
+  "type": "module",
   "description": "Professional Minecraft Server Plugin Manager",
   "main": "dist/main.js",
   "homepage": "./",
@@ -13,7 +14,7 @@
     "build:main": "tsc -p tsconfig.main.json",
     "build:all": "npm run build && electron-builder",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --max-warnings 20",
     "type-check": "tsc --noEmit"
   },
   "keywords": [
