@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Folder, FolderOpen, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Folder, FolderOpen, CheckCircle, XCircle } from 'lucide-react';
 import { useElectronAPI } from '../hooks/useElectronAPI';
 
 interface ServerPathSelectorProps {
@@ -18,22 +18,7 @@ const ServerPathSelector: React.FC<ServerPathSelectorProps> = ({
   
   const { selectFolder, getLastPath, setLastPath, validatePluginsFolder } = useElectronAPI();
 
-  useEffect(() => {
-    const loadLastPath = async () => {
-      try {
-        const lastPath = await getLastPath();
-        if (lastPath) {
-          setSelectedPath(lastPath);
-          await validatePath(lastPath);
-        }
-      } catch (error) {
-        console.error('Failed to load last path:', error);
-      }
-    };
-    loadLastPath();
-  }, [getLastPath]);
-
-  const validatePath = async (path: string) => {
+  const validatePath = useCallback(async (path: string) => {
     if (!path) {
       setIsValid(false);
       setValidationMessage('');
@@ -57,7 +42,22 @@ const ServerPathSelector: React.FC<ServerPathSelectorProps> = ({
     } finally {
       setIsValidating(false);
     }
-  };
+  }, [validatePluginsFolder, onPathValidated, setLastPath]);
+
+  useEffect(() => {
+    const loadLastPath = async () => {
+      try {
+        const lastPath = await getLastPath();
+        if (lastPath) {
+          setSelectedPath(lastPath);
+          await validatePath(lastPath);
+        }
+      } catch (error) {
+        console.error('Failed to load last path:', error);
+      }
+    };
+    loadLastPath();
+  }, [getLastPath, validatePath]);
 
   const handleBrowse = async () => {
     const path = await selectFolder();
@@ -93,7 +93,7 @@ const ServerPathSelector: React.FC<ServerPathSelectorProps> = ({
           />
           {isValidating && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <span className="loading loading-spinner loading-sm"></span>
             </div>
           )}
         </div>

@@ -230,12 +230,14 @@ const App: React.FC = () => {
 
           {/* Error Display */}
           {error && (
-            <div className="alert alert-error">
+            <div role="alert" className="alert alert-error">
               <AlertTriangle className="w-4 h-4" />
               <span>{error}</span>
+              <div className="flex-1"></div>
               <button
                 onClick={clearError}
                 className="btn btn-ghost btn-xs"
+                aria-label="Dismiss error"
               >
                 Dismiss
               </button>
@@ -280,7 +282,7 @@ const App: React.FC = () => {
                 >
                   {isScanning ? (
                     <>
-                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      <span className="loading loading-spinner loading-sm"></span>
                       Scanning...
                     </>
                   ) : (

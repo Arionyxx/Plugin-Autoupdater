@@ -3,7 +3,6 @@ import { Plugin } from '../types';
 import { 
   Check, 
   Download, 
-  RefreshCw, 
   Clock, 
   AlertCircle,
   FileText,
@@ -72,7 +71,7 @@ const PluginList: React.FC<PluginListProps> = ({
 
   const getStatusIcon = (plugin: Plugin) => {
     if (plugin.status === 'checking') {
-      return <RefreshCw className="w-4 h-4 animate-spin text-warning" />;
+      return <span className="loading loading-spinner loading-xs text-warning"></span>;
     }
     if (plugin.updateAvailable) {
       return <AlertCircle className="w-4 h-4 text-warning" />;
@@ -110,8 +109,17 @@ const PluginList: React.FC<PluginListProps> = ({
             className="btn btn-sm btn-accent"
             disabled={isLoading}
           >
-            <Download className="w-4 h-4 mr-2" />
-            Update All
+            {isLoading ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                Updating All...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 mr-2" />
+                Update All
+              </>
+            )}
           </button>
         )}
       </div>
@@ -164,16 +172,31 @@ const PluginList: React.FC<PluginListProps> = ({
         {filteredAndSortedPlugins.length === 0 ? (
           <div className="text-center py-8 text-base-content/60">
             {plugins.length === 0 ? (
-              <div className="space-y-2">
-                <FileText className="w-12 h-12 mx-auto opacity-50" />
-                <p>No plugins found in the selected folder.</p>
-                <p className="text-sm">Make sure you've selected the correct plugins directory.</p>
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 rounded-full bg-base-300 flex items-center justify-center">
+                    <FileText className="w-8 h-8 opacity-50" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-medium">No plugins found</h3>
+                <p className="text-sm">No plugins were found in the selected folder.</p>
+                <p className="text-sm opacity-70">Make sure you've selected the correct plugins directory.</p>
               </div>
             ) : (
-              <div className="space-y-2">
-                <Search className="w-12 h-12 mx-auto opacity-50" />
-                <p>No plugins match your search criteria.</p>
-                <p className="text-sm">Try adjusting your search or filters.</p>
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 rounded-full bg-base-300 flex items-center justify-center">
+                    <Search className="w-8 h-8 opacity-50" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-medium">No plugins match your search</h3>
+                <p className="text-sm">Try adjusting your search terms or filters.</p>
+                <button 
+                  onClick={() => {setSearchTerm(''); setFilterStatus('all');}}
+                  className="btn btn-outline btn-sm"
+                >
+                  Clear Filters
+                </button>
               </div>
             )}
           </div>
@@ -246,10 +269,14 @@ const PluginList: React.FC<PluginListProps> = ({
                       <button
                         onClick={() => onUpdatePlugin(plugin.id)}
                         className="btn btn-xs btn-primary"
-                        disabled={isLoading}
+                        disabled={isLoading || plugin.status === 'checking'}
                       >
-                        <Download className="w-3 h-3 mr-1" />
-                        Update
+                        {plugin.status === 'checking' ? (
+                          <span className="loading loading-spinner loading-xs"></span>
+                        ) : (
+                          <Download className="w-3 h-3 mr-1" />
+                        )}
+                        {plugin.status === 'checking' ? 'Updating...' : 'Update'}
                       </button>
                     )}
                   </td>
